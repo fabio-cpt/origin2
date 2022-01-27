@@ -1,0 +1,29 @@
+
+
+rm(list=ls())
+
+setwd("C:\\Users\\Fabio Caputo\\Downloads")
+
+library(doParallel)
+library(dplyr)
+library(data.table)
+library(cluster)
+library(factoextra)
+
+getwd()
+
+mysample <- read.csv("mysample.csv")
+mysample_pca <- read.csv("mysample_pca.csv")
+
+mysample <- mysample[,2:ncol(mysample)]
+mysample_pca <- mysample_pca[,2:ncol(mysample_pca)]
+
+
+start.time <- Sys.time()
+cl <- makeCluster(detectCores()*8)
+registerDoParallel(cl)
+gap_stat <- clusGap(mysample, FUN=pam, nstart=50 , k.max=15, B=50)
+stopCluster(cl)
+end.time <- Sys.time()
+time.taken <- round(end.time-start.time,2)
+time.taken
